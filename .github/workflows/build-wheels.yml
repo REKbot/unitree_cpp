@@ -11,34 +11,37 @@ permissions:
 
 jobs:
   build-wheels:
-    runs-on: ${{ matrix.runner }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - runner: ubuntu-latest
-            arch: x86_64
-          - runner: ubuntu-24.04-arm64
-            arch: aarch64
+        arch: [x86_64, aarch64]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install system dependencies
-        run: ./scripts/install_unitree_sdk2.sh
-
       - name: Install build tooling
         run: |
           python -m pip install --upgrade pip
-          python -m pip install build scikit-build-core pybind11
+          python -m pip install cibuildwheel
 
       - name: Build wheel
-        run: python -m build --wheel
+        env:
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_BUILD: "cp312-*"
+          CIBW_SKIP: "*musllinux*"
+          CIBW_BUILD_VERBOSITY: "1"
+          CIBW_ENVIRONMENT: "PIP_NO_BUILD_ISOLATION=0"
+          CIBW_BEFORE_ALL_LINUX: "./scripts/install_unitree_sdk2.sh"
+        run: python -m cibuildwheel --output-dir dist
 
       - name: Upload wheel artifact
         uses: actions/upload-artifact@v4
