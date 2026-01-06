@@ -11,7 +11,15 @@ permissions:
 
 jobs:
   build-wheels:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            arch: x86_64
+          - runner: ubuntu-24.04-arm64
+            arch: aarch64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,7 +43,7 @@ jobs:
       - name: Upload wheel artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: wheels-${{ matrix.arch }}
           path: dist/*.whl
 
       - name: Publish release assets
