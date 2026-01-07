@@ -41,6 +41,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: "1"
           CIBW_ENVIRONMENT: "PIP_NO_BUILD_ISOLATION=0"
           CIBW_BEFORE_ALL_LINUX: "./scripts/install_unitree_sdk2.sh"
+          CIBW_REPAIR_WHEEL_COMMAND: ""
         run: python -m cibuildwheel --output-dir dist
 
       - name: Upload wheel artifact
