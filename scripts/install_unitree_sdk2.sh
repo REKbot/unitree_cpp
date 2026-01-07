@@ -73,6 +73,6 @@ fi
 
 rm -rf /tmp/unitree_sdk2
 git clone --depth 1 https://github.com/unitreerobotics/unitree_sdk2.git /tmp/unitree_sdk2
-"${cmake_cmd}" -S /tmp/unitree_sdk2 -B /tmp/unitree_sdk2/build -DCMAKE_INSTALL_PREFIX=/usr/local
+"${cmake_cmd}" -S /tmp/unitree_sdk2 -B /tmp/unitree_sdk2/build -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_EXAMPLES=OFF
 "${cmake_cmd}" --build /tmp/unitree_sdk2/build -j"$(nproc)"
 ${SUDO} "${cmake_cmd}" --install /tmp/unitree_sdk2/build
