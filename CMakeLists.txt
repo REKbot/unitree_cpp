@@ -73,29 +73,32 @@ set_target_properties(unitree_cpp PROPERTIES
 # ======================
 # Debug C++ executable
 # ======================
-add_executable(debugcpp
-  src/unitree_controller.cpp
-)
+option(BUILD_DEBUGCPP "Build debugcpp executable" OFF)
+if (BUILD_DEBUGCPP)
+  add_executable(debugcpp
+    src/unitree_controller.cpp
+  )
 
-target_include_directories(debugcpp PRIVATE
-  ${UNITREE_SDK2_INCLUDE}
-  ${DDSCXX_ROOT_INCLUDE}
-)
+  target_include_directories(debugcpp PRIVATE
+    ${UNITREE_SDK2_INCLUDE}
+    ${DDSCXX_ROOT_INCLUDE}
+  )
 
-target_link_libraries(debugcpp PRIVATE
-  ${UNITREE_SDK2_LIB}
-  ${DDSC_LIB}
-  ${DDSCXX_LIB}
-  dl
-  Threads::Threads
-)
+  target_link_libraries(debugcpp PRIVATE
+    ${UNITREE_SDK2_LIB}
+    ${DDSC_LIB}
+    ${DDSCXX_LIB}
+    dl
+    Threads::Threads
+  )
 
-target_compile_options(debugcpp PRIVATE
-  -g -O0
-)
+  target_compile_options(debugcpp PRIVATE
+    -g -O0
+  )
 
-set_target_properties(debugcpp PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/
-  BUILD_WITH_INSTALL_RPATH TRUE
-  INSTALL_RPATH "$ORIGIN:/usr/local/lib"
-)
+  set_target_properties(debugcpp PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/
+    BUILD_WITH_INSTALL_RPATH TRUE
+    INSTALL_RPATH "$ORIGIN:/usr/local/lib"
+  )
+endif()
